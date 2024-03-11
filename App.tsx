@@ -5,9 +5,9 @@ import {
 } from '@expo-google-fonts/roboto';
 import { StatusBar } from 'expo-status-bar';
 import { NativeBaseProvider } from 'native-base';
-import { Text, View } from 'react-native';
 
 import { Loading } from '@components/Loading';
+import { SignIn } from '@screens/SignIn';
 import { THEME } from '@theme/index';
 
 export default function App() {
@@ -18,21 +18,11 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
-      {fontsLoaded && <Loading />}
+      <StatusBar style="light" backgroundColor="transparent" translucent />
 
-      {!fontsLoaded && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#202024',
-          }}
-        >
-          <StatusBar style="light" backgroundColor="transparent" translucent />
-          <Text style={{ color: '#fff' }}>Hello World!</Text>
-        </View>
-      )}
+      {!fontsLoaded && <Loading />}
+
+      {fontsLoaded && <SignIn />}
     </NativeBaseProvider>
   );
 }
