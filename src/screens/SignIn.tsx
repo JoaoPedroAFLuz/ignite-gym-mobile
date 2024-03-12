@@ -11,9 +11,8 @@ export function SignIn() {
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
-      bgColor="gray.700"
     >
-      <VStack flex={1} bg="gray.700" px={10}>
+      <VStack flex={1} px={10}>
         <Image
           source={BackGroundImg}
           alt="Pessoas treinando"

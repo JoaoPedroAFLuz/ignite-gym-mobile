@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NativeBaseProvider } from 'native-base';
 
 import { Loading } from '@components/Loading';
-import { SignIn } from '@screens/SignIn';
+import { Routes } from '@routes/index';
 import { THEME } from '@theme/index';
 
 export default function App() {
@@ -22,7 +22,7 @@ export default function App() {
 
       {!fontsLoaded && <Loading />}
 
-      {fontsLoaded && <SignIn />}
+      {fontsLoaded && <Routes />}
     </NativeBaseProvider>
   );
 }
