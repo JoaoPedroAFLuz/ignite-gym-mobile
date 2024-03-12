@@ -38,7 +38,7 @@ export function SignUp() {
 
         <Center>
           <Heading color="gray.100" fontSize="xl" mb={6} fontFamily="heading">
-            Crei sua conta
+            Crie sua conta
           </Heading>
 
           <Input placeholder="Nome" autoComplete="name" />
