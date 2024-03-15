@@ -7,6 +7,8 @@ interface UserPhotoProps extends IImageProps {
 export function UserPhoto({ size, ...rest }: UserPhotoProps) {
   return (
     <Image
+      source={{ uri: 'https://github.com/JoaoPedroAFLuz.png' }}
+      alt="Foto do usuário"
       w={size}
       h={size}
       rounded="full"
