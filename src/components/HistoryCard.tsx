@@ -12,12 +12,17 @@ export function HistoryCard() {
       bg="gray.600"
       rounded="md"
     >
-      <VStack>
-        <Heading color="white" fontSize="md" textTransform="capitalize">
+      <VStack flex={1}>
+        <Heading
+          numberOfLines={1}
+          textTransform="capitalize"
+          color="white"
+          fontSize="md"
+        >
           Costas
         </Heading>
 
-        <Text color="gray.100" fontSize="lg" numberOfLines={1}>
+        <Text numberOfLines={1} color="gray.100" fontSize="lg">
           Puxada Frontal
         </Text>
       </VStack>

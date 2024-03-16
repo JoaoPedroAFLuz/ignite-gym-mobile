@@ -23,6 +23,7 @@ export function History() {
       <SectionList
         sections={exercises}
         keyExtractor={(item) => item}
+        stickySectionHeadersEnabled={false}
         renderItem={() => <HistoryCard />}
         renderSectionHeader={({ section }) => (
           <Heading mt={10} mb={3} color="gray.200" fontSize="md">

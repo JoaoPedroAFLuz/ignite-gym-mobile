@@ -1,9 +1,12 @@
+import { HomeHeader } from '@components/HomeHeader';
+import { useNavigation } from '@react-navigation/native';
 import { FlatList, HStack, Heading, Text, VStack } from 'native-base';
 import { useState } from 'react';
 
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
+
 import { ExerciseCard } from '@components/ExerciseCard';
 import { Group } from '@components/Group';
-import { HomeHeader } from '@components/HomeHeader';
 
 export function Home() {
   const [groupSelected, setGroupSelected] = useState('costas');
@@ -15,6 +18,12 @@ export function Home() {
     'Remada unilateral',
   ]);
 
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+  function handleOpenExerciseDetails() {
+    navigation.navigate('Exercise');
+  }
+
   return (
     <VStack flex={1}>
       <HomeHeader />
@@ -24,9 +33,6 @@ export function Home() {
         keyExtractor={(item) => item}
         horizontal
         showsHorizontalScrollIndicator={false}
-        my={10}
-        maxH={10}
-        _contentContainerStyle={{ px: 8 }}
         renderItem={({ item }) => (
           <Group
             name={item}
@@ -34,6 +40,10 @@ export function Home() {
             onPress={() => setGroupSelected(item)}
           />
         )}
+        _contentContainerStyle={{ px: 8 }}
+        my={10}
+        minH={10}
+        maxH={10}
       />
 
       <VStack flex={1} px={8}>
@@ -51,7 +61,11 @@ export function Home() {
           data={exercises}
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
-            <ExerciseCard title={item} description="3 séries x 10 repetições" />
+            <ExerciseCard
+              title={item}
+              description="3 séries x 10 repetições"
+              onPress={handleOpenExerciseDetails}
+            />
           )}
         />
       </VStack>

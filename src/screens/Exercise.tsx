@@ -1,6 +1,15 @@
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Box, HStack, Heading, Icon, Image, Text, VStack } from 'native-base';
+import {
+  Box,
+  HStack,
+  Heading,
+  Icon,
+  Image,
+  ScrollView,
+  Text,
+  VStack,
+} from 'native-base';
 import { TouchableOpacity } from 'react-native';
 
 import { Button } from '@components/Button';
@@ -38,54 +47,56 @@ export function Exercise() {
         </HStack>
       </VStack>
 
-      <VStack p={8}>
-        <Image
-          source={{
-            uri: 'https://static.tuasaude.com/media/article/ll/ae/puxada-frontal_63648_l.jpg',
-          }}
-          alt="Foto do exercício"
-          w="full"
-          h={80}
-          mb={3}
-          rounded="lg"
-          resizeMode="cover"
-        />
+      <ScrollView>
+        <VStack p={8}>
+          <Image
+            source={{
+              uri: 'https://static.tuasaude.com/media/article/ll/ae/puxada-frontal_63648_l.jpg',
+            }}
+            alt="Foto do exercício"
+            w="full"
+            h={80}
+            mb={3}
+            rounded="lg"
+            resizeMode="cover"
+          />
 
-        <Box pb={4} px={8} bg="gray.600" rounded="md">
-          <HStack
-            alignItems="center"
-            justifyContent="space-around"
-            mt={5}
-            mb={6}
-          >
-            <HStack alignItems="center">
-              <SeriesSVG />
+          <Box pb={4} px={8} bg="gray.600" rounded="md">
+            <HStack
+              alignItems="center"
+              justifyContent="space-around"
+              mt={5}
+              mb={6}
+            >
+              <HStack alignItems="center">
+                <SeriesSVG />
 
-              <Text ml={2} color="gray.200" fontSize="sm">
-                3
-              </Text>
+                <Text ml={2} color="gray.200" fontSize="sm">
+                  3
+                </Text>
 
-              <Heading ml={2} color="gray.200" fontSize="md">
-                Séries
-              </Heading>
+                <Heading ml={2} color="gray.200" fontSize="md">
+                  Séries
+                </Heading>
+              </HStack>
+
+              <HStack alignItems="center">
+                <RepetitionSVG />
+
+                <Text ml={2} color="gray.200" fontSize="sm">
+                  10
+                </Text>
+
+                <Heading ml={2} color="gray.200" fontSize="md">
+                  Repetições
+                </Heading>
+              </HStack>
             </HStack>
 
-            <HStack alignItems="center">
-              <RepetitionSVG />
-
-              <Text ml={2} color="gray.200" fontSize="sm">
-                10
-              </Text>
-
-              <Heading ml={2} color="gray.200" fontSize="md">
-                Repetições
-              </Heading>
-            </HStack>
-          </HStack>
-
-          <Button title="Marcar como realizado" />
-        </Box>
-      </VStack>
+            <Button title="Marcar como realizado" />
+          </Box>
+        </VStack>
+      </ScrollView>
     </VStack>
   );
 }
