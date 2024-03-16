@@ -6,7 +6,7 @@ import { UserPhoto } from './UserPhoto';
 
 export function HomeHeader() {
   return (
-    <HStack bg="gray.600" pt={16} pb={5} px={8} alignItems="center">
+    <HStack alignItems="center" pt={4} pb={5} px={8} bg="gray.600" safeAreaTop>
       <UserPhoto size={16} mr={4} />
 
       <VStack flex={1}>
