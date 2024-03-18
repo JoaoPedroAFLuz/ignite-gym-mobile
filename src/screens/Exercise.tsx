@@ -33,7 +33,12 @@ export function Exercise() {
         </TouchableOpacity>
 
         <HStack mt={4} justifyContent="space-between">
-          <Heading color="gray.100" fontSize="lg" flexShrink={1}>
+          <Heading
+            flexShrink={1}
+            color="gray.100"
+            fontSize="lg"
+            fontFamily="heading"
+          >
             Puxada Frontal
           </Heading>
 
@@ -75,7 +80,12 @@ export function Exercise() {
                   3
                 </Text>
 
-                <Heading ml={2} color="gray.200" fontSize="md">
+                <Heading
+                  ml={2}
+                  color="gray.200"
+                  fontSize="md"
+                  fontFamily="heading"
+                >
                   Séries
                 </Heading>
               </HStack>
@@ -87,7 +97,12 @@ export function Exercise() {
                   10
                 </Text>
 
-                <Heading ml={2} color="gray.200" fontSize="md">
+                <Heading
+                  ml={2}
+                  color="gray.200"
+                  fontSize="md"
+                  fontFamily="heading"
+                >
                   Repetições
                 </Heading>
               </HStack>

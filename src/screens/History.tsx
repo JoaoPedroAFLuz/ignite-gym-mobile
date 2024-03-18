@@ -26,7 +26,13 @@ export function History() {
         stickySectionHeadersEnabled={false}
         renderItem={() => <HistoryCard />}
         renderSectionHeader={({ section }) => (
-          <Heading mt={10} mb={3} color="gray.200" fontSize="md">
+          <Heading
+            mt={10}
+            mb={3}
+            color="gray.200"
+            fontSize="md"
+            fontFamily="heading"
+          >
             {section.title}
           </Heading>
         )}

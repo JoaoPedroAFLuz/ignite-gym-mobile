@@ -7,7 +7,7 @@ interface ScreenHeaderProps {
 export function ScreenHeader({ title }: ScreenHeaderProps) {
   return (
     <Center pt={4} pb={6} bg="gray.600" safeAreaTop>
-      <Heading fontSize="xl" color="gray.100">
+      <Heading color="gray.100" fontSize="xl" fontFamily="heading">
         {title}
       </Heading>
     </Center>

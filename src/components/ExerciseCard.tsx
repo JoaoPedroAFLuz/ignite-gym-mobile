@@ -35,11 +35,11 @@ export function ExerciseCard({
         />
 
         <VStack flex={1}>
-          <Heading fontSize="lg" color="white">
+          <Heading color="white" fontSize="lg" fontFamily="heading">
             {title}
           </Heading>
 
-          <Text mt={1} fontSize="sm" color="gray.200" numberOfLines={2}>
+          <Text mt={1} color="gray.200" fontSize="sm" numberOfLines={2}>
             {description}
           </Text>
         </VStack>
