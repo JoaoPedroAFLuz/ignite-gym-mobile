@@ -1,14 +1,26 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
-import { Center, Heading, Image, ScrollView, Text, VStack } from 'native-base';
+import {
+  Center,
+  Heading,
+  Image,
+  ScrollView,
+  Text,
+  useToast,
+  VStack,
+} from 'native-base';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
 
 import { Button } from '@components/Button';
 import { Input } from '@components/Input';
 
 import BackGroundImg from '@assets/background.png';
 import LogoSvg from '@assets/logo.svg';
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
 interface FormDataProps {
   name: string;
@@ -32,7 +44,8 @@ const singUpSchema = yup.object({
 });
 
 export function SignUp() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const toast = useToast();
 
   const {
     control,
@@ -43,24 +56,36 @@ export function SignUp() {
   });
 
   async function handleSingUp(data: FormDataProps) {
-    const response = await fetch('http://192.168.12.55:3333/users', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      await api.post('/users', data);
 
-    const json = await response.json();
+      toast.show({
+        title: 'Conta criada com sucesso!',
+        placement: 'top',
+        bgColor: 'green.500',
+      });
 
-    console.log(json);
+      navigation.navigate('SignIn');
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível criar a conta. Tente novamente mais tarde.';
+
+      return toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
+    }
   }
 
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets
     >
       <VStack flex={1} px={10}>
         <Image
