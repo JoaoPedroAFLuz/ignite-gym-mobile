@@ -42,8 +42,19 @@ export function SignUp() {
     resolver: yupResolver(singUpSchema),
   });
 
-  function handleSignIn(data: FormDataProps) {
-    console.log({ data });
+  async function handleSingUp(data: FormDataProps) {
+    const response = await fetch('http://192.168.12.55:3333/users', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const json = await response.json();
+
+    console.log(json);
   }
 
   return (
@@ -131,14 +142,14 @@ export function SignUp() {
                 placeholder="Confirme a Senha"
                 secureTextEntry
                 returnKeyType="send"
-                onSubmitEditing={handleSubmit(handleSignIn)}
+                onSubmitEditing={handleSubmit(handleSingUp)}
               />
             )}
           />
 
           <Button
             title="Criar e acessar"
-            onPress={handleSubmit(handleSignIn)}
+            onPress={handleSubmit(handleSingUp)}
           />
         </Center>
 
