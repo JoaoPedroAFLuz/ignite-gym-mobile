@@ -9,6 +9,7 @@ import {
   useToast,
   VStack,
 } from 'native-base';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -20,6 +21,7 @@ import { Input } from '@components/Input';
 
 import BackGroundImg from '@assets/background.png';
 import LogoSvg from '@assets/logo.svg';
+import { useAuthContext } from '@hooks/useAuthContext';
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
 interface FormDataProps {
@@ -44,7 +46,12 @@ const singUpSchema = yup.object({
 });
 
 export function SignUp() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { singIn } = useAuthContext();
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
   const toast = useToast();
 
   const {
@@ -55,18 +62,22 @@ export function SignUp() {
     resolver: yupResolver(singUpSchema),
   });
 
-  async function handleSingUp(data: FormDataProps) {
+  async function handleSingUp({ name, email, password }: FormDataProps) {
     try {
-      await api.post('/users', data);
+      setIsLoading(true);
+
+      await api.post('/users', { name, email, password });
 
       toast.show({
-        title: 'Conta criada com sucesso!',
+        title: 'Seja bem vindo(a) ao Ignite Gym',
         placement: 'top',
         bgColor: 'green.500',
       });
 
-      navigation.navigate('SignIn');
+      await singIn({ email, password });
     } catch (error) {
+      setIsLoading(false);
+
       const isAppError = error instanceof AppError;
 
       const title = isAppError
@@ -174,6 +185,7 @@ export function SignUp() {
 
           <Button
             title="Criar e acessar"
+            isLoading={isLoading}
             onPress={handleSubmit(handleSingUp)}
           />
         </Center>
@@ -182,6 +194,7 @@ export function SignUp() {
           title="Voltar para o login"
           variant="outline"
           mt={24}
+          isLoading={isLoading}
           onPress={navigation.goBack}
         />
       </VStack>
