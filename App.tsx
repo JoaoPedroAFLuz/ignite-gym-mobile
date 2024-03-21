@@ -6,8 +6,11 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { NativeBaseProvider } from 'native-base';
 
-import { Loading } from '@components/Loading';
+import { AuthContextProvider } from '@contexts/AuthContext';
 import { Routes } from '@routes/index';
+
+import { Loading } from '@components/Loading';
+
 import { THEME } from '@theme/index';
 
 export default function App() {
@@ -22,7 +25,11 @@ export default function App() {
 
       {!fontsLoaded && <Loading />}
 
-      {fontsLoaded && <Routes />}
+      {fontsLoaded && (
+        <AuthContextProvider>
+          <Routes />
+        </AuthContextProvider>
+      )}
     </NativeBaseProvider>
   );
 }
