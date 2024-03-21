@@ -1,21 +1,28 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
-import { Center, Heading, Image, ScrollView, Text, VStack } from 'native-base';
+import {
+  Center,
+  Heading,
+  Image,
+  ScrollView,
+  Text,
+  useToast,
+  VStack,
+} from 'native-base';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+import { SignInDTO } from '@dtos/SignInDTO';
+import { useAuthContext } from '@hooks/useAuthContext';
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
+import { AppError } from '@utils/AppError';
 
 import { Button } from '@components/Button';
 import { Input } from '@components/Input';
 
 import BackGroundImg from '@assets/background.png';
 import LogoSvg from '@assets/logo.svg';
-
-interface FormDataProps {
-  email: string;
-  password: string;
-}
 
 const singInSchema = yup.object({
   email: yup.string().required('Informe o e-mail.').email('E-mail inválido.'),
@@ -26,15 +33,43 @@ const singInSchema = yup.object({
 });
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { singIn } = useAuthContext();
+
+  const toast = useToast();
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm<FormDataProps>({
+  } = useForm<SignInDTO>({
     resolver: yupResolver(singInSchema),
   });
+
+  async function handleSingIn({ email, password }: SignInDTO) {
+    try {
+      setIsLoading(true);
+
+      await singIn({ email, password });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível realizar o login. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
+
+      setIsLoading(false);
+    }
+  }
 
   function handleNewAccount() {
     navigation.navigate('SignUp');
@@ -44,6 +79,7 @@ export function SignIn() {
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets
     >
       <VStack flex={1} px={10}>
         <Image
@@ -95,12 +131,16 @@ export function SignIn() {
                 autoComplete="password"
                 secureTextEntry
                 returnKeyType="send"
-                onSubmitEditing={handleSubmit(handleNewAccount)}
+                onSubmitEditing={handleSubmit(handleSingIn)}
               />
             )}
           />
 
-          <Button title="Acessar" onPress={handleSubmit(handleNewAccount)} />
+          <Button
+            title="Acessar"
+            isLoading={isLoading}
+            onPress={handleSubmit(handleSingIn)}
+          />
         </Center>
 
         <Center mt={24}>
