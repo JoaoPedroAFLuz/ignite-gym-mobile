@@ -78,9 +78,7 @@ export function Exercise() {
     try {
       setIsLoadingExerciseDetails(true);
 
-      const response = await api.get(`exercises/${exerciseId}`);
-
-      const { data } = response;
+      const { data } = await api.get(`exercises/${exerciseId}`);
 
       setExercise(data);
     } catch (error) {
