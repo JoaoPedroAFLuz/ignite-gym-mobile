@@ -1,28 +1,111 @@
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   Box,
   HStack,
   Heading,
   Icon,
   Image,
-  ScrollView,
   Text,
   VStack,
+  useToast,
 } from 'native-base';
+import { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
+import { ExerciseDTO } from '@dtos/ExerciseDTO';
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
+
 import { Button } from '@components/Button';
+import { Loading } from '@components/Loading';
 
 import BodySVG from '@assets/body.svg';
 import RepetitionSVG from '@assets/repetitions.svg';
 import SeriesSVG from '@assets/series.svg';
 
+interface RouteParamsProps {
+  exerciseId: string;
+}
+
 export function Exercise() {
+  const [isLoadingExerciseDetails, setIsLoadingExerciseDetails] =
+    useState(true);
+  const [isRegisteringExercise, setIsRegisteringExercise] = useState(false);
+  const [exercise, setExercise] = useState<ExerciseDTO>();
+
+  const toast = useToast();
+  const route = useRoute();
   const navigation = useNavigation();
+
+  const { exerciseId } = route.params as RouteParamsProps;
 
   function handleGoBack() {
     navigation.goBack();
+  }
+
+  async function handleExerciseRegister() {
+    try {
+      setIsRegisteringExercise(true);
+
+      await api.post('/history', { exercise_id: exerciseId });
+
+      toast.show({
+        title: 'Parabéns! Exercício concluído.',
+        placement: 'top',
+        bgColor: 'green.700',
+      });
+
+      handleGoBack();
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível marcar exercício como realizado. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
+    } finally {
+      setIsRegisteringExercise(false);
+    }
+  }
+
+  async function fetchExerciseDetails() {
+    try {
+      setIsLoadingExerciseDetails(true);
+
+      const response = await api.get(`exercises/${exerciseId}`);
+
+      const { data } = response;
+
+      setExercise(data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível carregar os detalhes do exercício. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
+    } finally {
+      setIsLoadingExerciseDetails(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchExerciseDetails();
+  }, [exerciseId]);
+
+  if (!exercise || isLoadingExerciseDetails) {
+    return <Loading />;
   }
 
   return (
@@ -39,79 +122,64 @@ export function Exercise() {
             fontSize="lg"
             fontFamily="heading"
           >
-            Puxada Frontal
+            {exercise.name}
           </Heading>
 
           <HStack alignItems="center">
             <BodySVG />
 
             <Text ml={1} color="gray.200" textTransform="capitalize">
-              Costas
+              {exercise.group}
             </Text>
           </HStack>
         </HStack>
       </VStack>
 
-      <ScrollView>
-        <VStack p={8}>
+      <VStack p={8}>
+        <Box rounded="lg" mb={3} overflow="hidden">
           <Image
             source={{
-              uri: 'https://static.tuasaude.com/media/article/ll/ae/puxada-frontal_63648_l.jpg',
+              uri: `${api.defaults.baseURL}/exercise/demo/${exercise.demo}`,
             }}
             alt="Foto do exercício"
             w="full"
             h={80}
-            mb={3}
             rounded="lg"
             resizeMode="cover"
           />
+        </Box>
 
-          <Box pb={4} px={8} bg="gray.600" rounded="md">
-            <HStack
-              alignItems="center"
-              justifyContent="space-around"
-              mt={5}
-              mb={6}
-            >
-              <HStack alignItems="center">
-                <SeriesSVG />
+        <Box pb={4} px={8} bg="gray.600" rounded="md">
+          <HStack
+            alignItems="center"
+            justifyContent="space-around"
+            mt={5}
+            mb={6}
+          >
+            <HStack alignItems="center">
+              <SeriesSVG />
 
-                <Text ml={2} color="gray.200" fontSize="sm">
-                  3
-                </Text>
-
-                <Heading
-                  ml={2}
-                  color="gray.200"
-                  fontSize="md"
-                  fontFamily="heading"
-                >
-                  Séries
-                </Heading>
-              </HStack>
-
-              <HStack alignItems="center">
-                <RepetitionSVG />
-
-                <Text ml={2} color="gray.200" fontSize="sm">
-                  10
-                </Text>
-
-                <Heading
-                  ml={2}
-                  color="gray.200"
-                  fontSize="md"
-                  fontFamily="heading"
-                >
-                  Repetições
-                </Heading>
-              </HStack>
+              <Text ml={2} color="gray.200" fontSize="sm">
+                {`${exercise.series} Séries`}
+              </Text>
             </HStack>
 
-            <Button title="Marcar como realizado" />
-          </Box>
-        </VStack>
-      </ScrollView>
+            <HStack alignItems="center">
+              <RepetitionSVG />
+
+              <Text ml={2} color="gray.200" fontSize="sm">
+                {`${exercise.repetitions} Repetições`}
+              </Text>
+            </HStack>
+          </HStack>
+
+          <Button
+            title="Marcar como realizado"
+            isLoading={isRegisteringExercise}
+            onPress={handleExerciseRegister}
+          />
+        </Box>
+      </VStack>
     </VStack>
   );
 }

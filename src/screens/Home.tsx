@@ -14,7 +14,7 @@ import { Loading } from '@components/Loading';
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [groupSelected, setGroupSelected] = useState<string>('costas');
+  const [groupSelected, setGroupSelected] = useState<string>('');
   const [groups, setGroups] = useState<string[]>([]);
   const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
 
@@ -33,6 +33,7 @@ export function Home() {
       const { data } = response;
 
       setGroups(data);
+      setGroupSelected(data[0]);
     } catch (error) {
       const isAppError = error instanceof AppError;
 
